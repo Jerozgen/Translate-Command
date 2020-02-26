@@ -1,0 +1,250 @@
+define BLOCK_LITERAL = group(
+    literal("block").storeFlat("CHOICE_LITERAL"),
+    COORDINATE_SET.storeVar("COORDINATE_SET")
+);
+define ENTITY_LITERAL = group(
+    literal("entity").storeFlat("CHOICE_LITERAL"),
+    ENTITY.storeVar("ENTITY")
+);
+define STORAGE_LITERAL = group(
+    literal("storage").storeFlat("CHOICE_LITERAL"),
+    RESOURCE_LOCATION.storeVar("RESOURCE_LOCATION").hint("Storage Location")
+);
+
+
+define BOSSBAR = group(
+    literal("bossbar").storeFlat("COMMAND"),
+    choice(
+        group(
+            literal("add").storeFlat("CHOICE"),
+            RESOURCE_LOCATION.storeVar("RESOURCE_LOCATION").hint("Bossbar"),
+            TEXT_COMPONENT.storeVar("TEXT_COMPONENT").hint("Display Name").hint("Translatable")
+        ),
+        group(
+            literal("set").storeFlat("CHOICE"),
+            RESOURCE_LOCATION.storeVar("RESOURCE_LOCATION").hint("Bossbar"),
+            literal("name"),
+            TEXT_COMPONENT.storeVar("TEXT_COMPONENT").hint("Display Name").hint("Translatable")
+        )
+    )
+);
+
+define CLONE = group(
+    literal("clone").storeFlat("COMMAND"),
+    COORDINATE_SET.storeVar("FROM").hint("Source From"),
+    COORDINATE_SET.storeVar("TO").hint("Source To"),
+    COORDINATE_SET.storeVar("DESTINATION").hint("Destination"),
+    literal("filtered"),
+    BLOCK_TAGGED.storeVar("BLOCK_TAGGED").hint("Translatable"),
+    optional(
+        choice(
+            literal("force").storeFlat("CLONE_MODE"),
+            literal("move").storeFlat("CLONE_MODE"),
+            literal("normal").storeFlat("CLONE_MODE")
+        )
+    )
+);
+
+define DATA = group(
+    literal("data").storeFlat("COMMAND"),
+    choice(
+        group(
+            literal("merge").storeFlat("CHOICE"),
+            choice(
+                BLOCK_LITERAL,
+                ENTITY_LITERAL,
+                STORAGE_LITERAL
+            ).hint("Data Target"),
+            NBT_COMPOUND.storeVar("NBT_COMPOUND").hint("NBT").hint("Translatable")
+        ),
+        group(
+            literal("modify").storeFlat("CHOICE"),
+            choice(
+                BLOCK_LITERAL,
+                ENTITY_LITERAL,
+                STORAGE_LITERAL
+            ).hint("Data Target"),
+            NBT_PATH.storeVar("NBT_PATH"),
+            choice(
+                literal("append").storeFlat("CHOICE_OPERATION"),
+                group(
+                    literal("insert").storeFlat("CHOICE_OPERATION"),
+                    INTEGER.storeVar("INDEX").hint("Insert Index")
+                ),
+                literal("merge").storeFlat("CHOICE_OPERATION"),
+                literal("prepend").storeFlat("CHOICE_OPERATION"),
+                literal("set").storeFlat("CHOICE_OPERATION")
+            ),
+            group(
+                literal("value"),
+                NBT_VALUE.storeVar("NBT_VALUE").hint("Translatable")
+            ).hint("Data Source")
+        )
+    )
+);
+
+define FILL = group(
+    literal("fill").storeFlat("COMMAND"),
+    COORDINATE_SET.storeVar("FROM").hint("From"),
+    COORDINATE_SET.storeVar("TO").hint("To"),
+    BLOCK.storeVar("BLOCK").hint("Translatable"),
+    optional(
+        choice(
+            literal("destroy").storeFlat("CHOICE"),
+            literal("hollow").storeFlat("CHOICE"),
+            literal("keep").storeFlat("CHOICE"),
+            literal("outline").storeFlat("CHOICE"),
+            group(
+                literal("replace").storeFlat("CHOICE"),
+                optional(
+                    BLOCK_TAGGED.storeVar("REPLACE").hint("Translatable")
+                )
+            )
+        )
+    )
+);
+
+define GIVE = group(
+    literal("give").storeFlat("COMMAND"),
+    ENTITY.storeVar("ENTITY"),
+    ITEM.storeVar("ITEM").hint("Translatable"),
+    optional(INTEGER.storeVar("AMOUNT").hint("Amount"))
+);
+
+define REPLACEITEM = group(
+    literal("replaceitem").storeFlat("COMMAND"),
+    choice(
+        BLOCK_LITERAL,
+        ENTITY_LITERAL
+    ),
+    SLOT_ID.storeVar("SLOT_ID"),
+    ITEM.storeVar("ITEM").hint("Translatable"),
+    optional(INTEGER.storeVar("COUNT").hint("Count"))
+);
+
+define SCOREBOARD = group(
+    literal("scoreboard").storeFlat("COMMAND"),
+    literal("objectives"),
+    literal("modify").storeFlat("CHOICE"),
+    IDENTIFIER_A.storeVar("OBJECTIVE").hint("Objective"),
+    literal("displayName"),
+    TEXT_COMPONENT.storeVar("TEXT_COMPONENT").hint("Display Name").hint("Translatable")
+);
+
+define SET = group(
+    literal("set").storeFlat("COMMAND"),
+    POINTER.storeVar("POINTER"),
+    EQUALS,
+    NBT_VALUE.storeVar("NBT_VALUE").hint("Translatable")
+);
+
+define SETBLOCK = group(
+    literal("setblock").storeFlat("COMMAND"),
+    COORDINATE_SET.storeVar("COORDINATE_SET"),
+    BLOCK.storeVar("BLOCK").hint("Translatable"),
+    optional(
+        choice(
+            literal("replace").storeFlat("OLD_BLOCK_HANDLING"),
+            literal("destroy").storeFlat("OLD_BLOCK_HANDLING"),
+            literal("keep").storeFlat("OLD_BLOCK_HANDLING")
+        )
+    )
+);
+
+define SUMMON = group(
+    literal("summon").storeFlat("COMMAND"),
+    NEW_ENTITY_LITERAL.storeVar("NEW_ENTITY_LITERAL").hint("Translatable"),
+    optional(
+        group (
+            COORDINATE_SET.storeVar("COORDINATE_SET"),
+            optional(
+                NBT_COMPOUND.storeVar("NBT_COMPOUND").hint("NBT").hint("Translatable")
+            )
+        )
+    )
+);
+
+define TEAM = group(
+    literal("team").storeFlat("COMMAND"),
+    choice(
+        group(
+            literal("add").storeFlat("CHOICE"),
+            IDENTIFIER_A.storeVar("TEAM").hint("Team"),
+            TEXT_COMPONENT.storeVar("TEXT_COMPONENT").hint("Display Name").hint("Translatable")
+        ),
+        group(
+            literal("modify").storeFlat("CHOICE"),
+            IDENTIFIER_A.storeVar("TEAM").hint("Team"),
+            choice(
+                literal("displayName").storeFlat("OPTION"),
+                literal("prefix").storeFlat("OPTION"),
+                literal("suffix").storeFlat("OPTION")
+            ),
+            TEXT_COMPONENT.storeVar("TEXT_COMPONENT").hint("Translatable")
+        )
+    )
+);
+
+define TELLRAW = group(
+    literal("tellraw").storeFlat("COMMAND"),
+    ENTITY.storeVar("ENTITY"),
+    TEXT_COMPONENT.storeVar("TEXT_COMPONENT").hint("Translatable")
+);
+
+define TITLE = group(
+    literal("title").storeFlat("COMMAND"),
+    ENTITY.storeVar("ENTITY"),
+    choice(
+        literal("title").storeFlat("CHOICE"),
+        literal("subtitle").storeFlat("CHOICE"),
+        literal("actionbar").storeFlat("CHOICE")
+    ),
+    TEXT_COMPONENT.storeVar("TEXT_COMPONENT").hint("Translatable")
+);
+
+define USING_SUMMON_INSTRUCTION = group(
+    literal("using").storeFlat("COMMAND"),
+    literal("summon"),
+    NEW_ENTITY_LITERAL.storeVar("NEW_ENTITY_LITERAL").hint("Translatable"),
+    optional(
+        COORDINATE_SET.storeVar("COORDINATE_SET"),
+        optional(
+            NBT_COMPOUND.storeVar("NBT_COMPOUND").hint("NBT").hint("Translatable")
+        )
+    ),
+    literal("with"),
+    IDENTIFIER_A.storeVar("TAG_NAME").hint("Summoning Tag"),
+    optional(
+        MODIFIER.storeVar("MODIFIER")
+    ),
+    ANONYMOUS_INNER_FUNCTION
+);
+
+
+return group(
+    optional(
+        group(
+            literal("with"),
+            SCORE.storeVar("LANGUAGE_SCORE").hint("Language Score")
+        )
+    ),
+    optional(
+        MODIFIER.storeVar("COMMAND_MODIFIER")
+    ),
+    choice(
+        USING_SUMMON_INSTRUCTION,
+        BOSSBAR,
+        CLONE,
+        DATA,
+        FILL,
+        GIVE,
+        REPLACEITEM,
+        SCOREBOARD,
+        SET,
+        SETBLOCK,
+        SUMMON,
+        TEAM,
+        TELLRAW,
+        TITLE
+    )
+);

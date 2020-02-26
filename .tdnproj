@@ -1,0 +1,27 @@
+{
+  "default-namespace": "translate",
+  "language-level": 2,
+  "datapack-output": "$PROJECT_DIR$\\out",
+  "resources-output": "",
+  "export-comments": false,
+  "strict-text-components": false,
+  "strict-nbt": false,
+  "anonymous-function-name": "_anonymous*",
+  "target-version": [
+    1,
+    15,
+    0
+  ],
+  "export-gamelog": true,
+  "game-logger": {
+    "compact": true,
+    "timestamp-enabled": true,
+    "pos-enabled": true,
+    "line-number-enabled": false
+  },
+  "clear-datapack-output": false,
+  "clear-resources-output": false,
+  "use-plugins": [
+    "Translate Command"
+  ]
+}

@@ -1,0 +1,17 @@
+translate tellraw @a {"translate":"test.language"}
+translate tellraw @a {"translate":"test.en_us"}
+translate tellraw @a {"translate":"test.ru_ru"}
+translate at @a summon bee{CustomName:'{"translate":"test.language"}'}
+as @a translate with @s language tellraw @s {"translate":"test.language"}
+
+for (language in languages) {
+    tellraw @s {
+        "text": ${language.values["test.language"]},
+        "clickEvent": {
+            "action": "run_command",
+            "value":${
+                "/scoreboard players set language global " + language.index
+            }
+        }
+    }
+}

@@ -1,0 +1,173 @@
+@ on compile
+@ priority ${Real.MAX_VALUE}
+
+# -------------------------- [ CONFIG ] --------------------------
+global var DEFAULT_LANGUAGE_SCORE = pointer<language -> global>    # — is used for checking a language by its index
+global var LANGUAGES_FOLDER_PATH = "/lang"                         # — the folder where language files are stored
+global var DEFAULT_LANGUAGE = "en_us"                              # — if the current language doesn't have a translation
+                                                                   #    for the given key, the translation will be taken
+                                                                   #    from this file. The default language index is 0.
+# ----------------------------------------------------------------
+
+
+# Creating a list of languages
+global var languages = []
+
+private var languages_folder = null
+private var default_language_file = null
+
+try {
+    eval languages_folder = File.in.read(LANGUAGES_FOLDER_PATH)
+    eval default_language_file = File.in.read(LANGUAGES_FOLDER_PATH + "/" + DEFAULT_LANGUAGE + ".json")
+} catch (e) {}
+
+do if (languages_folder != null) {
+    do if (default_language_file != null)
+        eval languages.add({
+            "index": 0,
+            "values": JSON.parse(default_language_file)
+        })
+    
+    for (file in languages_folder){
+        do if(file != (DEFAULT_LANGUAGE + ".json") && file.substring(file.length - 5) == ".json")
+            eval languages.add({
+            "index": languages.length,
+            "values": JSON.parse(File.in.read(LANGUAGES_FOLDER_PATH + "/" + file))
+        })
+    }
+}
+
+
+# Replaces values of "translate" keys in a text component to values from a dictionary
+global var translateTextComponent = function (object, dictionary) {
+    switch (typeOf(object)) {
+        case "dictionary":
+            return object.map(function(key, value) {
+                switch (key) {
+                    case "translate": {
+                        do if(dictionary[value] != null)
+                            return dictionary[value]
+                        else do if(languages[0][value] != null)
+                            return languages[0][value]
+                        else
+                            return value
+                    }
+                    case "with":
+                    case "extra":
+                    case "hoverEvent":
+                    case "value":
+                        return translateTextComponent(value, dictionary)
+                    default:
+                        return value
+                }
+            })
+        case "list":
+            return object.map(function(el) {
+                return translateTextComponent(el, dictionary)
+            })
+        case "string":
+            return object
+        case "text_component":
+            return new text_component(translateTextComponent(JSON.parse((string) object), dictionary))
+        default:
+            throw "Don't know how to translate this text component: " + object
+    }
+}
+
+
+# Applies translateTextComponent(...) to text components of every tag_string in the given NBT
+global var translateNBT = function (object, dictionary) {
+    switch (typeOf(object)) {
+        case "tag_compound": {
+            var translated = {}
+            for (el in object){
+                var key = el["key"]
+                var value = el["value"]
+                switch (typeOf(value)) {
+                    case "tag_list":
+                    case "tag_compound":
+                    case "tag_string": {
+                        eval translated[key] = translateNBT(value, dictionary)
+                        break
+                    }
+                    default:
+                        eval translated[key] = value
+                }
+            }
+            return new nbt(translated)
+        }
+        case "tag_list": {
+            var translated = []
+            for (el in object) {
+                switch (typeOf(el)) {
+                    case "tag_list":
+                    case "tag_compound":
+                    case "tag_string": {
+                        eval translated.add(translateNBT(el, dictionary))
+                        break
+                    }
+                    default:
+                        eval translated.add(el)
+                }
+            }
+            return new nbt(translated)
+        }
+        case "tag_string": {
+            var json_obj = null
+            try {
+                eval json_obj = JSON.parse(JSON.parse((string) object))
+            } catch (e){
+                return object
+            }
+            return new nbt(new text_component(translateTextComponent(json_obj, dictionary)))
+        }
+        case "tag_byte":
+        case "tag_short":
+        case "tag_int":
+        case "tag_float":
+        case "tag_double":
+        case "tag_long":
+        case "tag_byte_array":
+        case "tag_int_array":
+        case "tag_long_array":
+            return object
+        default:
+            throw "Don't know how to translate this NBT: " + object
+    }
+}
+
+
+# Applies translateNBT(...) to the item NBT
+global var translateItem = function (object, dictionary) {
+    do if (typeOf(object) == "item") {
+        var translated = new item(object.itemType)
+        do if (object.itemTag != null)
+            eval translated.itemTag = translateNBT(nbt<{}>.merge(object.itemTag), dictionary)
+        return translated
+    }
+    throw "Don't know how to translate this item: " + object
+}
+
+
+# Applies translateNBT(...) to the block NBT
+global var translateBlock = function (object, dictionary) {
+    do if (typeOf(object) == "block") {
+        var translated = new block(object.blockType)
+        eval translated.blockState = object.blockState
+        do if (object.blockTag != null)
+            eval translated.blockTag = translateNBT(nbt<{}>.merge(object.blockTag), dictionary)
+        return translated
+    }
+    throw "Don't know how to translate this block: " + object
+}
+
+
+# Applies translateNBT(...) to the new-entity NBT
+global var translateNewEntity = function (object, dictionary) {
+    do if (typeOf(object) == "dictionary") {
+        do if (object.fullNBT != null)
+            eval object.fullNBT = translateNBT(object.fullNBT, dictionary)
+        return object
+    }
+    throw "Don't know how to translate this new-entity: " + object
+}

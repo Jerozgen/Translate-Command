@@ -1,0 +1,942 @@
+var language_score = DEFAULT_LANGUAGE_SCORE
+do if (args.LANGUAGE_SCORE != null)
+    eval language_score = args.LANGUAGE_SCORE
+
+var commands = function () {
+    for (language in languages){
+        do if (args.COMMAND_MODIFIER == null) {
+            switch(args.COMMAND) {
+                
+                case "bossbar": {
+                    switch(args.CHOICE) {
+                        case "add": {
+                            if score deref $language_score matches ${language.index}
+                                bossbar add ${args.RESOURCE_LOCATION} ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                            break
+                        }
+                        case "set": {
+                            if score deref $language_score matches ${language.index}
+                                bossbar set ${args.RESOURCE_LOCATION} name ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                            break
+                        }
+                    }
+                    break
+                }
+                
+                case "data": {
+                    switch(args.CHOICE) {
+                        case "merge": {
+                            switch(args.CHOICE_LITERAL) {
+                                case "block": {
+                                    if score deref $language_score matches ${language.index}
+                                        data merge block ${args.COORDINATE_SET} ${translateNBT(args.NBT_COMPOUND, language.values)}
+                                    break
+                                }
+                                case "entity": {
+                                    if score deref $language_score matches ${language.index}
+                                        data merge entity ${args.ENTITY} ${translateNBT(args.NBT_COMPOUND, language.values)}
+                                    break
+                                }
+                                case "storage": {
+                                    if score deref $language_score matches ${language.index}
+                                        data merge storage ${args.RESOURCE_LOCATION} ${translateNBT(args.NBT_COMPOUND, language.values)}
+                                    break
+                                }
+                            }
+                            break
+                        }
+                        case "modify": {
+                            switch(args.CHOICE_OPERATION) {
+                                case "append": {
+                                    switch(args.CHOICE_LITERAL) {
+                                        case "block": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} append value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "entity": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify entity ${args.ENTITY} ${args.NBT_PATH} append value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "storage": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} append value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                    }
+                                    break
+                                }
+                                case "insert": {
+                                    switch(args.CHOICE_LITERAL) {
+                                        case "block": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} insert ${args.INDEX} value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "entity": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify entity ${args.ENTITY} ${args.NBT_PATH} insert ${args.INDEX} value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "storage": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} insert ${args.INDEX} value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                    }
+                                    break
+                                }
+                                case "merge": {
+                                    switch(args.CHOICE_LITERAL) {
+                                        case "block": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} merge value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "entity": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify entity ${args.ENTITY} ${args.NBT_PATH} merge value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "storage": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} merge value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                    }
+                                    break
+                                }
+                                case "prepend": {
+                                    switch(args.CHOICE_LITERAL) {
+                                        case "block": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} prepend value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "entity": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify entity ${args.ENTITY} ${args.NBT_PATH} prepend value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "storage": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} prepend value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                    }
+                                    break
+                                }
+                                case "set": {
+                                    switch(args.CHOICE_LITERAL) {
+                                        case "block": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} set value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "entity": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify entity ${args.ENTITY} ${args.NBT_PATH} set value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "storage": {
+                                            if score deref $language_score matches ${language.index}
+                                                data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} set value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                    }
+                                    break
+                                }
+                            }
+                            break
+                        }
+                    }
+                    break
+                }
+                
+                case "fill": {
+                    do if (args.CHOICE == null)
+                        if score deref $language_score matches ${language.index}
+                            fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)}
+                    else
+                        switch(args.CHOICE) {
+                            case "destroy": {
+                                if score deref $language_score matches ${language.index}
+                                    fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)} destroy
+                                break
+                            }
+                            case "hollow": {
+                                if score deref $language_score matches ${language.index}
+                                    fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)} hollow
+                                break
+                            }
+                            case "keep": {
+                                if score deref $language_score matches ${language.index}
+                                    fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)} keep
+                                break
+                            }
+                            case "outline": {
+                                if score deref $language_score matches ${language.index}
+                                    fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)} outline
+                                break
+                            }
+                            case "replace": {
+                                do if (args.REPLACE == null)
+                                    if score deref $language_score matches ${language.index}
+                                        fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)} replace
+                                else
+                                    if score deref $language_score matches ${language.index}
+                                        fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)} replace ${translateBlock(args.REPLACE, language.values)}
+                                break
+                            }
+                        }
+                    break
+                }
+                
+                case "give": {
+                    do if (args.AMOUNT == null)
+                        if score deref $language_score matches ${language.index}
+                            give ${args.ENTITY} ${translateItem(args.ITEM, language.values)}
+                    else
+                        if score deref $language_score matches ${language.index}
+                            give ${args.ENTITY} ${translateItem(args.ITEM, language.values)} ${args.AMOUNT}
+                    break
+                }
+                
+                case "replaceitem": {
+                    switch(args.CHOICE_LITERAL) {
+                        case "block": {
+                            do if (args.COUNT == null)
+                                if score deref $language_score matches ${language.index}
+                                    replaceitem block ${args.COORDINATE_SET} ${args.SLOT_ID} ${translateItem(args.ITEM, language.values)}
+                            else
+                                if score deref $language_score matches ${language.index}
+                                    replaceitem block ${args.COORDINATE_SET} ${args.SLOT_ID} ${translateItem(args.ITEM, language.values)} ${args.COUNT}
+                            break
+                        }
+                        case "entity": {
+                            do if (args.COUNT == null)
+                                if score deref $language_score matches ${language.index}
+                                    replaceitem entity ${args.ENTITY} ${args.SLOT_ID} ${translateItem(args.ITEM, language.values)}
+                            else
+                                if score deref $language_score matches ${language.index}
+                                    replaceitem entity ${args.ENTITY} ${args.SLOT_ID} ${translateItem(args.ITEM, language.values)} ${args.COUNT}
+                            break
+                        }
+                    }
+                    break
+                }
+                
+                case "set": {
+                    if score deref $language_score matches ${language.index}
+                        set ${args.POINTER} = ${translateNBT(args.NBT_VALUE, language.values)}
+                    break
+                }
+                
+                case "setblock": {
+                    do if (args.OLD_BLOCK_HANDLING == null)
+                        if score deref $language_score matches ${language.index}
+                            setblock ${args.COORDINATE_SET} ${translateBlock(args.BLOCK, language.values)}
+                    else
+                        switch(args.OLD_BLOCK_HANDLING) {
+                            case "replace": {
+                                if score deref $language_score matches ${language.index}
+                                    setblock ${args.COORDINATE_SET} ${translateBlock(args.BLOCK, language.values)} replace
+                                break
+                            }
+                            case "destroy": {
+                                if score deref $language_score matches ${language.index}
+                                    setblock ${args.COORDINATE_SET} ${translateBlock(args.BLOCK, language.values)} destroy
+                                break
+                            }
+                            case "keep": {
+                                if score deref $language_score matches ${language.index}
+                                    setblock ${args.COORDINATE_SET} ${translateBlock(args.BLOCK, language.values)} keep
+                                break
+                            }
+                        }
+                    break
+                }
+                
+                case "summon": {
+                    do if (args.NEW_ENTITY_LITERAL.fullNBT == null) {
+                        do if (args.COORDINATE_SET == null)
+                            if score deref $language_score matches ${language.index}
+                                summon ${args.NEW_ENTITY_LITERAL.type}
+                        else do if (args.NBT_COMPOUND == null)
+                            if score deref $language_score matches ${language.index}
+                                summon ${args.NEW_ENTITY_LITERAL.type} ${args.COORDINATE_SET}
+                        else
+                            if score deref $language_score matches ${language.index}
+                                summon ${args.NEW_ENTITY_LITERAL.type} ${args.COORDINATE_SET} ${translateNBT(args.NBT_COMPOUND, language.values)}
+                    }
+                    else {
+                        do if (args.COORDINATE_SET == null)
+                            if score deref $language_score matches ${language.index}
+                                summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)}
+                        else do if (args.NBT_COMPOUND == null)
+                            if score deref $language_score matches ${language.index}
+                                summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)} ${args.COORDINATE_SET}
+                        else
+                            if score deref $language_score matches ${language.index}
+                                summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)} ${args.COORDINATE_SET} ${translateNBT(args.NBT_COMPOUND, language.values)}
+                    }
+                    break
+                }
+                
+                case "team": {
+                    switch(args.CHOICE) {
+                        case "add": {
+                            if score deref $language_score matches ${language.index}
+                                team add ${args.TEAM} ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                            break
+                        }
+                        case "modify": {
+                            switch(args.OPTION) {
+                                case "displayName": {
+                                    if score deref $language_score matches ${language.index}
+                                        team modify ${args.TEAM} displayName ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                                    break
+                                }
+                                case "prefix": {
+                                    if score deref $language_score matches ${language.index}
+                                        team modify ${args.TEAM} prefix ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                                    break
+                                }
+                                case "suffix": {
+                                    if score deref $language_score matches ${language.index}
+                                        team modify ${args.TEAM} suffix ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                                    break
+                                }
+                            }
+                            break
+                        }
+                    }
+                    break
+                }
+                
+                case "tellraw": {
+                    if score deref $language_score matches ${language.index}
+                        tellraw ${args.ENTITY} ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                    break
+                }
+                
+                case "title": {
+                    switch(args.CHOICE) {
+                        case "title": {
+                            if score deref $language_score matches ${language.index}
+                                title ${args.ENTITY} title ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                            break
+                        }
+                        case "subtitle": {
+                            if score deref $language_score matches ${language.index}
+                                title ${args.ENTITY} subtitle ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                            break
+                        }
+                        case "actionbar": {
+                            if score deref $language_score matches ${language.index}
+                                title ${args.ENTITY} actionbar ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                            break
+                        }
+                    }
+                    break
+                }
+                
+                case "using": {
+                    do if (args.NEW_ENTITY_LITERAL.fullNBT == null) {
+                        do if (args.COORDINATE_SET == null) {
+                            do if (args.MODIFIER == null) {
+                                if score deref $language_score matches ${language.index} function {
+                                    using summon ${args.NEW_ENTITY_LITERAL.type}
+                                    with ${args.TAG_NAME} {
+                                        do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                            eval args.ANONYMOUS_INNER_FUNCTION()
+                                    }
+                                }
+                            } else {
+                                if score deref $language_score matches ${language.index} function {
+                                    using summon ${args.NEW_ENTITY_LITERAL.type}
+                                    with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                                        do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                            eval args.ANONYMOUS_INNER_FUNCTION()
+                                    }
+                                }
+                            }
+                        } else {
+                            do if (args.NBT_COMPOUND == null) {
+                                do if (args.MODIFIER == null) {
+                                    if score deref $language_score matches ${language.index} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type} ${args.COORDINATE_SET} 
+                                        with ${args.TAG_NAME} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                } else {
+                                    if score deref $language_score matches ${language.index} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type} ${args.COORDINATE_SET}
+                                        with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                }
+                            } else {
+                                do if (args.MODIFIER == null) {
+                                    if score deref $language_score matches ${language.index} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type} ${args.COORDINATE_SET} 
+                                        ${translateNBT(args.NBT_COMPOUND, language.values)} with ${args.TAG_NAME} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                } else {
+                                    if score deref $language_score matches ${language.index} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type} ${args.COORDINATE_SET} 
+                                        ${translateNBT(args.NBT_COMPOUND, language.values)} with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        do if (args.COORDINATE_SET == null) {
+                            do if (args.MODIFIER == null) {
+                                if score deref $language_score matches ${language.index} function {
+                                    using summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)}
+                                    with ${args.TAG_NAME} {
+                                        do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                            eval args.ANONYMOUS_INNER_FUNCTION()
+                                    }
+                                }
+                            } else {
+                                if score deref $language_score matches ${language.index} function {
+                                    using summon ${args.NEW_ENTITY_LITERAL.type}
+                                    with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                                        do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                            eval args.ANONYMOUS_INNER_FUNCTION()
+                                    }
+                                }
+                            }
+                        } else {
+                            do if (args.NBT_COMPOUND == null) {
+                                do if (args.MODIFIER == null) {
+                                    if score deref $language_score matches ${language.index} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)}
+                                        ${args.COORDINATE_SET} 
+                                        with ${args.TAG_NAME} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                } else {
+                                    if score deref $language_score matches ${language.index} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)}
+                                        ${args.COORDINATE_SET}
+                                        with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                }
+                            } else {
+                                do if (args.MODIFIER == null) {
+                                    if score deref $language_score matches ${language.index} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)}
+                                        ${args.COORDINATE_SET} 
+                                        ${translateNBT(args.NBT_COMPOUND, language.values)} with ${args.TAG_NAME} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                } else {
+                                    if score deref $language_score matches ${language.index} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)}
+                                        ${args.COORDINATE_SET} 
+                                        ${translateNBT(args.NBT_COMPOUND, language.values)} with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break
+                }
+            }
+        }
+        else {
+            switch(args.COMMAND) {
+                
+                case "bossbar": {
+                    switch(args.CHOICE) {
+                        case "add": {
+                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                bossbar add ${args.RESOURCE_LOCATION} ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                            break
+                        }
+                        case "set": {
+                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                bossbar set ${args.RESOURCE_LOCATION} name ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                            break
+                        }
+                    }
+                    break
+                }
+                
+                case "data": {
+                    switch(args.CHOICE) {
+                        case "merge": {
+                            switch(args.CHOICE_LITERAL) {
+                                case "block": {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                        data merge block ${args.COORDINATE_SET} ${translateNBT(args.NBT_COMPOUND, language.values)}
+                                    break
+                                }
+                                case "entity": {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                        data merge entity ${args.ENTITY} ${translateNBT(args.NBT_COMPOUND, language.values)}
+                                    break
+                                }
+                                case "storage": {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                        data merge storage ${args.RESOURCE_LOCATION} ${translateNBT(args.NBT_COMPOUND, language.values)}
+                                    break
+                                }
+                            }
+                            break
+                        }
+                        case "modify": {
+                            switch(args.CHOICE_OPERATION) {
+                                case "append": {
+                                    switch(args.CHOICE_LITERAL) {
+                                        case "block": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} append value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "entity": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify entity ${args.ENTITY} ${args.NBT_PATH} append value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "storage": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} append value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                    }
+                                    break
+                                }
+                                case "insert": {
+                                    switch(args.CHOICE_LITERAL) {
+                                        case "block": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} insert ${args.INDEX} value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "entity": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify entity ${args.ENTITY} ${args.NBT_PATH} insert ${args.INDEX} value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "storage": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} insert ${args.INDEX} value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                    }
+                                    break
+                                }
+                                case "merge": {
+                                    switch(args.CHOICE_LITERAL) {
+                                        case "block": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} merge value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "entity": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify entity ${args.ENTITY} ${args.NBT_PATH} merge value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "storage": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} merge value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                    }
+                                    break
+                                }
+                                case "prepend": {
+                                    switch(args.CHOICE_LITERAL) {
+                                        case "block": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} prepend value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "entity": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify entity ${args.ENTITY} ${args.NBT_PATH} prepend value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "storage": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} prepend value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                    }
+                                    break
+                                }
+                                case "set": {
+                                    switch(args.CHOICE_LITERAL) {
+                                        case "block": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} set value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "entity": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify entity ${args.ENTITY} ${args.NBT_PATH} set value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                        case "storage": {
+                                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                                data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} set value ${translateNBT(args.NBT_VALUE, language.values)}
+                                            break
+                                        }
+                                    }
+                                    break
+                                }
+                            }
+                            break
+                        }
+                    }
+                    break
+                }
+                
+                case "fill": {
+                    do if (args.CHOICE == null)
+                        if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                            fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)}
+                    else
+                        switch(args.CHOICE) {
+                            case "destroy": {
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                    fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)} destroy
+                                break
+                            }
+                            case "hollow": {
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                    fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)} hollow
+                                break
+                            }
+                            case "keep": {
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                    fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)} keep
+                                break
+                            }
+                            case "outline": {
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                    fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)} outline
+                                break
+                            }
+                            case "replace": {
+                                do if (args.REPLACE == null)
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                        fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)} replace
+                                else
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                        fill ${args.FROM} ${args.TO} ${translateBlock(args.BLOCK, language.values)} replace ${translateBlock(args.REPLACE, language.values)}
+                                break
+                            }
+                        }
+                    break
+                }
+                
+                case "give": {
+                    do if (args.AMOUNT == null)
+                        if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                            give ${args.ENTITY} ${translateItem(args.ITEM, language.values)}
+                    else
+                        if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                            give ${args.ENTITY} ${translateItem(args.ITEM, language.values)} ${args.AMOUNT}
+                    break
+                }
+                
+                case "replaceitem": {
+                    switch(args.CHOICE_LITERAL) {
+                        case "block": {
+                            do if (args.COUNT == null)
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                    replaceitem block ${args.COORDINATE_SET} ${args.SLOT_ID} ${translateItem(args.ITEM, language.values)}
+                            else
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                    replaceitem block ${args.COORDINATE_SET} ${args.SLOT_ID} ${translateItem(args.ITEM, language.values)} ${args.COUNT}
+                            break
+                        }
+                        case "entity": {
+                            do if (args.COUNT == null)
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                    replaceitem entity ${args.ENTITY} ${args.SLOT_ID} ${translateItem(args.ITEM, language.values)}
+                            else
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                    replaceitem entity ${args.ENTITY} ${args.SLOT_ID} ${translateItem(args.ITEM, language.values)} ${args.COUNT}
+                            break
+                        }
+                    }
+                    break
+                }
+                
+                case "set": {
+                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                        set ${args.POINTER} = ${translateNBT(args.NBT_VALUE, language.values)}
+                    break
+                }
+                
+                case "setblock": {
+                    do if (args.OLD_BLOCK_HANDLING == null)
+                        if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                            setblock ${args.COORDINATE_SET} ${translateBlock(args.BLOCK, language.values)}
+                    else
+                        switch(args.OLD_BLOCK_HANDLING) {
+                            case "replace": {
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                    setblock ${args.COORDINATE_SET} ${translateBlock(args.BLOCK, language.values)} replace
+                                break
+                            }
+                            case "destroy": {
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                    setblock ${args.COORDINATE_SET} ${translateBlock(args.BLOCK, language.values)} destroy
+                                break
+                            }
+                            case "keep": {
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                    setblock ${args.COORDINATE_SET} ${translateBlock(args.BLOCK, language.values)} keep
+                                break
+                            }
+                        }
+                    break
+                }
+                
+                case "summon": {
+                    do if (args.NEW_ENTITY_LITERAL.fullNBT == null) {
+                        do if (args.COORDINATE_SET == null)
+                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                summon ${args.NEW_ENTITY_LITERAL.type}
+                        else do if (args.NBT_COMPOUND == null)
+                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                summon ${args.NEW_ENTITY_LITERAL.type} ${args.COORDINATE_SET}
+                        else
+                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                summon ${args.NEW_ENTITY_LITERAL.type} ${args.COORDINATE_SET} ${translateNBT(args.NBT_COMPOUND, language.values)}
+                    }
+                    else {
+                        do if (args.COORDINATE_SET == null)
+                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)}
+                        else do if (args.NBT_COMPOUND == null)
+                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)} ${args.COORDINATE_SET}
+                        else
+                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)} ${args.COORDINATE_SET} ${translateNBT(args.NBT_COMPOUND, language.values)}
+                    }
+                    break
+                }
+                
+                case "team": {
+                    switch(args.CHOICE) {
+                        case "add": {
+                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                team add ${args.TEAM} ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                            break
+                        }
+                        case "modify": {
+                            switch(args.OPTION) {
+                                case "displayName": {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                        team modify ${args.TEAM} displayName ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                                    break
+                                }
+                                case "prefix": {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                        team modify ${args.TEAM} prefix ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                                    break
+                                }
+                                case "suffix": {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                        team modify ${args.TEAM} suffix ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                                    break
+                                }
+                            }
+                            break
+                        }
+                    }
+                    break
+                }
+                
+                case "tellraw": {
+                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                        tellraw ${args.ENTITY} ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                    break
+                }
+                
+                case "title": {
+                    switch(args.CHOICE) {
+                        case "title": {
+                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                title ${args.ENTITY} title ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                            break
+                        }
+                        case "subtitle": {
+                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                title ${args.ENTITY} subtitle ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                            break
+                        }
+                        case "actionbar": {
+                            if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER}
+                                title ${args.ENTITY} actionbar ${translateTextComponent(args.TEXT_COMPONENT, language.values)}
+                            break
+                        }
+                    }
+                    break
+                }
+                
+                case "using": {
+                    do if (args.NEW_ENTITY_LITERAL.fullNBT == null) {
+                        do if (args.COORDINATE_SET == null) {
+                            do if (args.MODIFIER == null) {
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER} function {
+                                    using summon ${args.NEW_ENTITY_LITERAL.type}
+                                    with ${args.TAG_NAME} {
+                                        do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                            eval args.ANONYMOUS_INNER_FUNCTION()
+                                    }
+                                }
+                            } else {
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER} function {
+                                    using summon ${args.NEW_ENTITY_LITERAL.type}
+                                    with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                                        do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                            eval args.ANONYMOUS_INNER_FUNCTION()
+                                    }
+                                }
+                            }
+                        } else {
+                            do if (args.NBT_COMPOUND == null) {
+                                do if (args.MODIFIER == null) {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type} ${args.COORDINATE_SET} 
+                                        with ${args.TAG_NAME} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                } else {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type} ${args.COORDINATE_SET}
+                                        with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                }
+                            } else {
+                                do if (args.MODIFIER == null) {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type} ${args.COORDINATE_SET} 
+                                        ${translateNBT(args.NBT_COMPOUND, language.values)} with ${args.TAG_NAME} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                } else {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type} ${args.COORDINATE_SET} 
+                                        ${translateNBT(args.NBT_COMPOUND, language.values)} with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        do if (args.COORDINATE_SET == null) {
+                            do if (args.MODIFIER == null) {
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER} function {
+                                    using summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)}
+                                    with ${args.TAG_NAME} {
+                                        do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                            eval args.ANONYMOUS_INNER_FUNCTION()
+                                    }
+                                }
+                            } else {
+                                if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER} function {
+                                    using summon ${args.NEW_ENTITY_LITERAL.type}
+                                    with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                                        do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                            eval args.ANONYMOUS_INNER_FUNCTION()
+                                    }
+                                }
+                            }
+                        } else {
+                            do if (args.NBT_COMPOUND == null) {
+                                do if (args.MODIFIER == null) {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)}
+                                        ${args.COORDINATE_SET} 
+                                        with ${args.TAG_NAME} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                } else {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)}
+                                        ${args.COORDINATE_SET}
+                                        with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                }
+                            } else {
+                                do if (args.MODIFIER == null) {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)}
+                                        ${args.COORDINATE_SET} 
+                                        ${translateNBT(args.NBT_COMPOUND, language.values)} with ${args.TAG_NAME} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                } else {
+                                    if score deref $language_score matches ${language.index} raw ${args.COMMAND_MODIFIER} function {
+                                        using summon ${args.NEW_ENTITY_LITERAL.type}${translateNBT(args.NEW_ENTITY_LITERAL.fullNBT, language.values)}
+                                        ${args.COORDINATE_SET} 
+                                        ${translateNBT(args.NBT_COMPOUND, language.values)} with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                                            do if (args.ANONYMOUS_INNER_FUNCTION != null)
+                                                eval args.ANONYMOUS_INNER_FUNCTION()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break
+                }
+            }
+        }
+    }
+}
+
+do if (modifiers.length == 0)
+    eval commands()
+else raw $modifiers function {
+    eval commands()
+}
