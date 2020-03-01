@@ -217,7 +217,7 @@ define USING_SUMMON_INSTRUCTION = group(
     optional(
         MODIFIER.storeVar("MODIFIER")
     ),
-    ANONYMOUS_INNER_FUNCTION
+    ANONYMOUS_INNER_FUNCTION.storeVar("ANONYMOUS_INNER_FUNCTION")
 );
 
 
