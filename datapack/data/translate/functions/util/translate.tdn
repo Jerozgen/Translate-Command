@@ -166,8 +166,8 @@ global var translateBlock = function (object, dictionary) {
 global var translateNewEntity = function (object, dictionary) {
     do if (typeOf(object) == "dictionary") {
         do if (object.fullNBT != null)
-            eval object.fullNBT = translateNBT(object.fullNBT, dictionary)
-        return object
+            return translateNBT(object.fullNBT, dictionary).merge(new nbt({id: object.type}))
+        return new nbt({id: object.type})
     }
     throw "Don't know how to translate this new-entity: " + object
 }
