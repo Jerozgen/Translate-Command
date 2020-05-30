@@ -119,6 +119,7 @@ global var translateNBT = function (object, dictionary) {
             } catch (e){
                 return object
             }
+            do if (json_obj == null) return object
             return new nbt(new text_component(translateTextComponent(json_obj, dictionary)))
         }
         case "tag_byte":
