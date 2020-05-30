@@ -229,7 +229,7 @@ return group(
         )
     ),
     optional(
-        MODIFIER.storeVar("COMMAND_MODIFIER")
+        list(MODIFIER.storeVar("COMMAND_MODIFIERS"))
     ),
     choice(
         USING_SUMMON_INSTRUCTION,

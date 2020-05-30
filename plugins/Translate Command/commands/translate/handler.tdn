@@ -3,7 +3,7 @@ do if (args.LANGUAGE_SCORE != null)
     eval language_score = args.LANGUAGE_SCORE
 
 var command = function (language) {
-    raw ${args.COMMAND_MODIFIER} expand {
+    raw ${args.COMMAND_MODIFIERS} expand {
         switch(args.COMMAND) {
             
             case "bossbar": {
