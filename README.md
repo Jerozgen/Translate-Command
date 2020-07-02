@@ -1,6 +1,6 @@
 # Translator
 
- Translator will make translating of datapacks easier, if you translate sounds and textures, or if you wouldn't like to use resource packs for text translating.
+ Translator will make translating of data packs easier if you translate sounds and textures, or if you wouldn't like to use resource packs for text translating.
 
  Documentation: [Google Docs](https://docs.google.com/document/d/1fGTRXi7II-23N2CI2SV1DjQyhDWSGFE8-XpbJpKcc1g/)
 
