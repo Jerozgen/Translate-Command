@@ -83,6 +83,11 @@ define DATA = group(
     )
 );
 
+define EXPAND = group(
+    literal("expand").storeFlat("COMMAND"),
+    ANONYMOUS_INNER_FUNCTION.storeVar("COMMANDS")
+);
+
 define FILL = group(
     literal("fill").storeFlat("COMMAND"),
     COORDINATE_SET.storeVar("FROM").hint("From"),
@@ -102,6 +107,11 @@ define FILL = group(
             )
         )
     )
+);
+
+define FUNCTION = group(
+    literal("function").storeFlat("COMMAND"),
+    ANONYMOUS_INNER_FUNCTION.storeVar("COMMANDS")
 );
 
 define GIVE = group(
@@ -220,7 +230,6 @@ define USING_SUMMON_INSTRUCTION = group(
     ANONYMOUS_INNER_FUNCTION.storeVar("ANONYMOUS_INNER_FUNCTION")
 );
 
-
 return group(
     optional(
         group(
@@ -236,7 +245,9 @@ return group(
         BOSSBAR,
         CLONE,
         DATA,
+        EXPAND,
         FILL,
+        FUNCTION,
         GIVE,
         REPLACEITEM,
         SCOREBOARD,

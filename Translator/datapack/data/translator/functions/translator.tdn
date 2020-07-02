@@ -1,0 +1,270 @@
+@ on compile
+@ breaking
+
+define global static final class Translator {
+    private static var defaultScore: pointer = pointer<language -> global>
+    private static var languagesFolderPath: string = "/lang"
+    private static var defaultLanguageFile: string = "en_us"
+    private static var languages: list = []
+    private static var needReadingLanguages: boolean = true
+    
+    public static getLanguagesFolderPath(): string {return languagesFolderPath}
+    public static setLanguagesFolderPath(folderPath: string) {
+        eval languagesFolderPath = folderPath
+        eval needReadingLanguages = true
+    }
+    
+    public static getDefaultLanguageFile(): string {return defaultLanguageFile}
+    public static setDefaultLanguageFile(languageFile: string) {
+        eval defaultLanguageFile = languageFile
+        eval needReadingLanguages = true
+    }
+    
+    public static getDefaultScore(): pointer {return defaultScore}
+    public static setDefaultScore(score: pointer) {eval defaultScore = score}
+    
+    public static getLanguages(): list {
+        eval readLanguages()
+        var copy = []
+        for (language in languages) {
+            eval copy.add(language)
+        }
+        return copy
+    }
+    
+    public static getDefaultLanguage(): Language {
+        return getLanguages()[0]
+    }
+    
+    public static forceReadLanguages() {
+        eval needReadingLanguages = true
+        eval readLanguages()
+    }
+    
+    public static readLanguages() {
+        if (!needReadingLanguages) return null
+        eval needReadingLanguages = false
+        
+        var languagesFolder
+        try {
+            eval languagesFolder = File.in.read(languagesFolderPath)
+        } catch (e) {
+            throw "Could not find the language folder '" + languagesFolderPath + "'"
+        }
+        
+        if (!(languagesFolder is list)) throw "'" + languagesFolderPath + "' isn't a folder"
+        
+        eval languagesFolder = languagesFolder.filter(
+            function(file, index) {
+                return file.matches(".+[.]json")
+            }
+        )
+        if (languagesFolder.isEmpty()) throw "Could not find any JSON files in '" + languagesFolderPath + "'"
+        
+        var defaultLanguageText
+        try {
+            eval defaultLanguageText = File.in.read(languagesFolderPath + "/" + defaultLanguageFile + ".json")
+        } catch (e) {
+            log warning "Could not find the default language file '" + languagesFolderPath + "/" + defaultLanguageFile + ".json'"
+        }
+        
+        if (defaultLanguageText != null) 
+            eval languages.add(new Language(0, JSON.parse(defaultLanguageText)))
+        
+        for (file in languagesFolder) {
+            if (file != defaultLanguageFile + ".json") 
+                eval languages.add(new Language(
+                        languages.length, 
+                        JSON.parse(File.in.read(languagesFolderPath + "/" + file))
+                ))
+        }
+    }
+    
+    # ———————————————————————————————————————————————————————————————————————————————————
+    private static var currentLanguage: Language?
+    
+    public static getCurrentLanguage(): Language? {
+        return currentLanguage
+    }
+    
+    private static var commands: function?
+    private static var score: pointer?
+    private static var expand: boolean?
+    private static var modifiers: string?
+    
+    public static translate(commands: function, score: pointer?, expand: boolean?, modifiers: string?) {
+        if (score == null) eval score = defaultScore
+        if (expand == null) eval expand = false
+        
+        eval Translator.commands = commands
+        eval Translator.score = score
+        eval Translator.expand = expand
+        eval Translator.modifiers = modifiers
+        
+        eval readLanguages()
+        
+        if (languages.length > 3) {
+            eval generateFunctionTree(0, languages.length - 1, false)
+        } else {
+            for (language in languages) {
+                if (expand) {
+                    if score deref $score matches ${language.getIndex()} raw $modifiers expand {
+                        eval currentLanguage = language
+                        eval commands(language)
+                    }
+                } else {
+                    if score deref $score matches ${language.getIndex()} raw $modifiers function {
+                        eval currentLanguage = language
+                        eval commands(language)
+                    }
+                }
+            }
+        }
+        
+        eval currentLanguage = null
+    }
+    
+    
+    private static generateFunctionTree(start: int, end: int, inner: boolean) {
+        if(start != end) {
+            var n = start + (int) Math.pow(2, (int) Math.log2(end - start)) - 1
+            if (inner) function { eval _generateFunctionTree(start, n, end) }
+            else eval _generateFunctionTree(start, n, end)
+        } 
+        else if (expand) raw $modifiers expand {
+            eval currentLanguage = languages[start]
+            eval commands(languages[start])
+        }
+        else raw $modifiers function {
+            eval currentLanguage = languages[start]
+            eval commands(languages[start])
+        }
+    }
+    
+    private static _generateFunctionTree(start: int, n: int, end: int) {
+        if score deref $score matches $start..$n expand {
+            eval generateFunctionTree(start, n, true)
+        }
+        if score deref $score matches ${n + 1}..$end expand {
+            eval generateFunctionTree(n + 1, end, true)
+        }
+    }
+    
+    
+    # ———————————————————————————————————————————————————————————————————————————————————
+    public static translateText(object: dictionary, language: Language): dictionary {
+        return object.map(
+            function(key, value) {
+                switch (key) {
+                    case "value": {
+                        try {
+                            var nbt = NBT.parse(value)
+                            if (nbt.tag != null) return (string) translateNBT(nbt, language)
+                        } catch (e) {}
+                        
+                        try {
+                            var json = JSON.parse(value)
+                            if (json.name != null) {
+                                eval json.name = JSON.stringify(translateText(JSON.parse(json.name), language))
+                                return JSON.stringify(json)
+                            }
+                        } catch (e) {}
+                        
+                        return value
+                    }
+                    case "tag": {
+                        return translateNBT(NBT.parse(value), language)
+                    }
+                    case "translate": {
+                        if (language[value] != null && language[value] is string)
+                            return language[value]
+                        
+                        if (languages[0][value] != null && languages[0][value] is string)
+                            return languages[0][value]
+                        
+                        return value
+                    } 
+                    default: {return translateText(value, language)}
+                }
+            }
+        )
+    }
+    
+    public static translateText(object: list, language: Language): list {
+        return object.map(
+            function(value, index) {
+                return translateText(value, language)
+            }
+        )
+    }
+    
+    public static translateText(object: boolean, language: Language): boolean {return object}
+    public static translateText(object: int,     language: Language): int     {return object}
+    public static translateText(object: real,    language: Language): real    {return object}
+    public static translateText(object: string,  language: Language): string  {return object}
+    
+    public static translateText(object: text_component, language: Language): text_component {
+        return new text_component(translateText(JSON.parse((string) object), language))
+    }
+    
+    
+    # ———————————————————————————————————————————————————————————————————————————————————
+    public static translateNBT(object: tag_compound, language: Language): tag_compound {
+        var translated = {}
+        for (pair in object) {
+            eval translated[pair.key] = translateNBT(pair.value, language)
+        }
+        return new nbt(translated)
+    }
+    
+    public static translateNBT(object: tag_list, language: Language): tag_list {
+        var translated = []
+        for (value in object) {
+            eval translated.add(translateNBT(value, language))
+        }
+        return new nbt(translated)
+    }
+    
+    public static translateNBT(object: tag_string, language: Language): tag_string {
+        var jsonObject = null
+        try {
+            eval jsonObject = JSON.parse(JSON.parse((string) object))
+        } catch (e){
+            return object
+        }
+        if (jsonObject == null) return object
+        
+        return new nbt(new text_component(translateText(jsonObject, language)))
+    }
+    
+    public static translateNBT(object: nbt_value, language: Language): nbt_value {
+        return object
+    }
+    
+    
+    # ———————————————————————————————————————————————————————————————————————————————————
+    public static translateItem(object: item, language: Language): item {
+        var translated = new item(object.itemType)
+        if (object.itemTag != null)
+            eval translated.itemTag = translateNBT(nbt<{}>.merge(object.itemTag), language)
+        return translated
+    }
+    
+    
+    # ———————————————————————————————————————————————————————————————————————————————————
+    public static translateBlock(object: block, language: Language): block {
+        var translated = new block(object.blockType)
+        eval translated.blockState = object.blockState
+        if (object.blockTag != null)
+            eval translated.blockTag = translateNBT(nbt<{}>.merge(object.blockTag), language)
+        return translated
+    }
+    
+    
+    # ———————————————————————————————————————————————————————————————————————————————————
+    public static translateNewEntity(object: dictionary, language: Language): tag_compound {
+        if (object.fullNBT != null)
+            return translateNBT(object.fullNBT, language).merge(new nbt({id: object.type}))
+        return new nbt({id: object.type})
+    }
+}

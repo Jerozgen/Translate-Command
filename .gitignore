@@ -1,3 +1,9 @@
+Translator/.tdnui/
+Translator/out/
+Translator/.tdnbuild
 
-.tdnui/resource_cache
-out/*
+Example/.tdnui/
+Example/out/
+Example/.tdnbuild
+
+NBTparser/

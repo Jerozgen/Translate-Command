@@ -1,0 +1,38 @@
+@using_plugin translator
+
+define objective global
+define objective language
+
+eval Translator.setLanguagesFolderPath("/languages")
+
+translate tellraw @a {"translate":"test.language"}
+translate tellraw @a {"translate":"test.en_us"}
+translate tellraw @a {"translate":"test.ru_ru"}
+translate tellraw @a {"text":"[Hover1]","hoverEvent":{"action":"show_item","value":"{id:stone,Count:1b,tag:{display:{Lore:['{\"translate\":\"test.language\"}']}}}"}}
+translate tellraw @a {"text":"[Hover2]","hoverEvent":{"action":"show_item","contents":{"id":"stone","tag":"{display:{Lore:['{\"translate\":\"test.language\"}']}}"}}}
+translate at @a summon bee{CustomName:'{"translate":"test.language"}'}
+as @a translate with @s language tellraw @s {"translate":"test.language"}
+
+translate expand {
+    title @a actionbar ${new text_component(Translator.getCurrentLanguage()["test.text_component"])}
+}
+as @a translate with @s language function {
+    var lang = Translator.getCurrentLanguage()
+    title @s actionbar ${new text_component(lang["test.text_component"])}
+    playsound ${(resource) lang["test.voice.narrator.1"]} voice @s
+}
+
+# Simple language chooser:
+var score = Translator.getDefaultScore().target
+var objective = Translator.getDefaultScore().member
+for (language in Translator.getLanguages()) {
+    tellraw @s {
+        "text": ${language["test.language"]},
+        "clickEvent": {
+            "action": "run_command",
+            "value":${
+                "/scoreboard players set " + score + " " + objective + " " + language.getIndex()
+            }
+        }
+    }
+}

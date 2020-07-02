@@ -1,0 +1,6 @@
+{
+    "test.language": "English",
+    "test.en_us": "in en_us.json",
+    "test.voice.narrator.1": "example:en_us.voice.narrator.1",
+    "test.text_component": ["Enter ", {"text":"the code","color":"red"}]
+}

@@ -1,0 +1,330 @@
+var executeCommand = function(language: Language) {
+    switch(args.COMMAND) {
+        case "bossbar": {
+            switch(args.CHOICE) {
+                case "add": {
+                    bossbar add ${args.RESOURCE_LOCATION} ${Translator.translateText(args.TEXT_COMPONENT, language)}
+                    break
+                }
+                case "set": {
+                    bossbar set ${args.RESOURCE_LOCATION} name ${Translator.translateText(args.TEXT_COMPONENT, language)}
+                    break
+                }
+            }
+            break
+        }
+        
+        case "data": {
+            switch(args.CHOICE) {
+                case "merge": {
+                    switch(args.CHOICE_LITERAL) {
+                        case "block": {
+                            data merge block ${args.COORDINATE_SET} ${Translator.translateNBT(args.NBT_COMPOUND, language)}
+                            break
+                        }
+                        case "entity": {
+                            data merge entity ${args.ENTITY} ${Translator.translateNBT(args.NBT_COMPOUND, language)}
+                            break
+                        }
+                        case "storage": {
+                            data merge storage ${args.RESOURCE_LOCATION} ${Translator.translateNBT(args.NBT_COMPOUND, language)}
+                            break
+                        }
+                    }
+                    break
+                }
+                case "modify": {
+                    switch(args.CHOICE_OPERATION) {
+                        case "append": {
+                            switch(args.CHOICE_LITERAL) {
+                                case "block": {
+                                    data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} append value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                                case "entity": {
+                                    data modify entity ${args.ENTITY} ${args.NBT_PATH} append value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                                case "storage": {
+                                    data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} append value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                            }
+                            break
+                        }
+                        case "insert": {
+                            switch(args.CHOICE_LITERAL) {
+                                case "block": {
+                                    data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} insert ${args.INDEX} value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                                case "entity": {
+                                    data modify entity ${args.ENTITY} ${args.NBT_PATH} insert ${args.INDEX} value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                                case "storage": {
+                                    data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} insert ${args.INDEX} value ${Translator.translateNBT(args.NBT_VALUE, language)}    
+                                    break
+                                }
+                            }
+                            break
+                        }
+                        case "merge": {
+                            switch(args.CHOICE_LITERAL) {
+                                case "block": {
+                                    data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} merge value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                                case "entity": {
+                                    data modify entity ${args.ENTITY} ${args.NBT_PATH} merge value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                                case "storage": {
+                                    data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} merge value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                            }
+                            break
+                        }
+                        case "prepend": {
+                            switch(args.CHOICE_LITERAL) {
+                                case "block": {
+                                    data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} prepend value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                                case "entity": {
+                                    data modify entity ${args.ENTITY} ${args.NBT_PATH} prepend value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                                case "storage": {
+                                    data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} prepend value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                            }
+                            break
+                        }
+                        case "set": {
+                            switch(args.CHOICE_LITERAL) {
+                                case "block": {
+                                    data modify block ${args.COORDINATE_SET} ${args.NBT_PATH} set value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                                case "entity": {
+                                    data modify entity ${args.ENTITY} ${args.NBT_PATH} set value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                                case "storage": {
+                                    data modify storage ${args.RESOURCE_LOCATION} ${args.NBT_PATH} set value ${Translator.translateNBT(args.NBT_VALUE, language)}
+                                    break
+                                }
+                            }
+                            break
+                        }
+                    }
+                    break
+                }
+            }
+            break
+        }
+        
+        case "fill": {
+            switch(args.CHOICE) {
+                case null: {
+                    fill ${args.FROM} ${args.TO} ${Translator.translateBlock(args.BLOCK, language)}
+                }
+                case "destroy": {
+                    fill ${args.FROM} ${args.TO} ${Translator.translateBlock(args.BLOCK, language)} destroy
+                    break
+                }
+                case "hollow": {
+                    fill ${args.FROM} ${args.TO} ${Translator.translateBlock(args.BLOCK, language)} hollow
+                    break
+                }
+                case "keep": {
+                    fill ${args.FROM} ${args.TO} ${Translator.translateBlock(args.BLOCK, language)} keep
+                    break
+                }
+                case "outline": {
+                    fill ${args.FROM} ${args.TO} ${Translator.translateBlock(args.BLOCK, language)} outline
+                    break
+                }
+                case "replace": {
+                    if (args.REPLACE == null)
+                        fill ${args.FROM} ${args.TO} ${Translator.translateBlock(args.BLOCK, language)} replace
+                    else
+                        fill ${args.FROM} ${args.TO} ${Translator.translateBlock(args.BLOCK, language)} replace ${Translator.translateBlock(args.REPLACE, language)}
+                    break
+                }
+            }
+            break
+        }
+        
+        case "give": {
+            if (args.AMOUNT == null)
+                give ${args.ENTITY} ${Translator.translateItem(args.ITEM, language)}
+            else
+                give ${args.ENTITY} ${Translator.translateItem(args.ITEM, language)} ${args.AMOUNT}
+            break
+        }
+        
+        case "replaceitem": {
+            switch(args.CHOICE_LITERAL) {
+                case "block": {
+                    if (args.COUNT == null)
+                        replaceitem block ${args.COORDINATE_SET} ${args.SLOT_ID} ${Translator.translateItem(args.ITEM, language)}
+                    else
+                        replaceitem block ${args.COORDINATE_SET} ${args.SLOT_ID} ${Translator.translateItem(args.ITEM, language)} ${args.COUNT}
+                    break
+                }
+                case "entity": {
+                    if (args.COUNT == null)
+                        replaceitem entity ${args.ENTITY} ${args.SLOT_ID} ${Translator.translateItem(args.ITEM, language)}
+                    else
+                        replaceitem entity ${args.ENTITY} ${args.SLOT_ID} ${Translator.translateItem(args.ITEM, language)} ${args.COUNT}
+                    break
+                }
+            }
+            break
+        }
+        
+        case "set": {
+            set ${args.POINTER} = ${Translator.translateNBT(args.NBT_VALUE, language)}
+            break
+        }
+        
+        case "setblock": {
+            if (args.OLD_BLOCK_HANDLING == null)
+                setblock ${args.COORDINATE_SET} ${Translator.translateBlock(args.BLOCK, language)}
+            else
+                switch(args.OLD_BLOCK_HANDLING) {
+                    case "replace": {
+                        setblock ${args.COORDINATE_SET} ${Translator.translateBlock(args.BLOCK, language)} replace
+                        break
+                    }
+                    case "destroy": {
+                        setblock ${args.COORDINATE_SET} ${Translator.translateBlock(args.BLOCK, language)} destroy
+                        break
+                    }
+                    case "keep": {
+                        setblock ${args.COORDINATE_SET} ${Translator.translateBlock(args.BLOCK, language)} keep
+                        break
+                    }
+                }
+            break
+        }
+        
+        case "summon": {
+            if (args.COORDINATE_SET == null)
+                summon ${Translator.translateNewEntity(args.NEW_ENTITY_LITERAL, language)}
+            else if (args.NBT_COMPOUND == null)
+                summon ${Translator.translateNewEntity(args.NEW_ENTITY_LITERAL, language)} ${args.COORDINATE_SET}
+            else
+                summon ${Translator.translateNewEntity(args.NEW_ENTITY_LITERAL, language)} ${args.COORDINATE_SET} ${Translator.translateNBT(args.NBT_COMPOUND, language)}
+            break
+        }
+        
+        case "team": {
+            switch(args.CHOICE) {
+                case "add": {
+                    team add ${args.TEAM} ${Translator.translateText(args.TEXT_COMPONENT, language)}
+                    break
+                }
+                case "modify": {
+                    switch(args.OPTION) {
+                        case "displayName": {
+                            team modify ${args.TEAM} displayName ${Translator.translateText(args.TEXT_COMPONENT, language)}
+                            break
+                        }
+                        case "prefix": {
+                            team modify ${args.TEAM} prefix ${Translator.translateText(args.TEXT_COMPONENT, language)}
+                            break
+                        }
+                        case "suffix": {
+                            team modify ${args.TEAM} suffix ${Translator.translateText(args.TEXT_COMPONENT, language)}
+                            break
+                        }
+                    }
+                    break
+                }
+            }
+            break
+        }
+        
+        case "tellraw": {
+            tellraw ${args.ENTITY} ${Translator.translateText(args.TEXT_COMPONENT, language)}
+            break
+        }
+        
+        case "title": {
+            switch(args.CHOICE) {
+                case "title": {
+                    title ${args.ENTITY} title ${Translator.translateText(args.TEXT_COMPONENT, language)}
+                    break
+                }
+                case "subtitle": {
+                    title ${args.ENTITY} subtitle ${Translator.translateText(args.TEXT_COMPONENT, language)}
+                    break
+                }
+                case "actionbar": {
+                    title ${args.ENTITY} actionbar ${Translator.translateText(args.TEXT_COMPONENT, language)}
+                    break
+                }
+            }
+            break
+        }
+        
+        case "using": {
+            if (args.COORDINATE_SET == null)
+                function {
+                    using summon ${Translator.translateNewEntity(args.NEW_ENTITY_LITERAL, language)}
+                    with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                        if (args.ANONYMOUS_INNER_FUNCTION != null)
+                            eval args.ANONYMOUS_INNER_FUNCTION()
+                    }
+                }
+            else if (args.NBT_COMPOUND == null)
+                function {
+                    using summon ${Translator.translateNewEntity(args.NEW_ENTITY_LITERAL, language)} ${args.COORDINATE_SET}
+                    with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                        if (args.ANONYMOUS_INNER_FUNCTION != null)
+                            eval args.ANONYMOUS_INNER_FUNCTION()
+                    }
+                }
+            else
+                function {
+                    using summon ${Translator.translateNewEntity(args.NEW_ENTITY_LITERAL, language)} ${args.COORDINATE_SET} 
+                    ${Translator.translateNBT(args.NBT_COMPOUND, language)} with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                        if (args.ANONYMOUS_INNER_FUNCTION != null)
+                            eval args.ANONYMOUS_INNER_FUNCTION()
+                    }
+                }
+            break
+        }
+    }
+}
+
+switch(args.COMMAND) {
+    case "expand": {
+        if (modifiers.length == 0)
+            eval Translator.translate(args.COMMANDS, args.LANGUAGE_SCORE, true, args.COMMAND_MODIFIERS)
+        else raw $modifiers function {
+            eval Translator.translate(args.COMMANDS, args.LANGUAGE_SCORE, true, args.COMMAND_MODIFIERS)
+        }
+        break
+    }
+    case "function": {
+        if (modifiers.length == 0)
+            eval Translator.translate(args.COMMANDS, args.LANGUAGE_SCORE, false, args.COMMAND_MODIFIERS)
+        else raw $modifiers function {
+            eval Translator.translate(args.COMMANDS, args.LANGUAGE_SCORE, false, args.COMMAND_MODIFIERS)
+        }
+        break
+    }
+    default: {
+        if (modifiers.length == 0)
+            eval Translator.translate(executeCommand, args.LANGUAGE_SCORE, true, args.COMMAND_MODIFIERS)
+        else raw $modifiers function {
+            eval Translator.translate(executeCommand, args.LANGUAGE_SCORE, true, args.COMMAND_MODIFIERS)
+        }
+    }
+}

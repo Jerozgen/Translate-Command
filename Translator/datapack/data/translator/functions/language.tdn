@@ -1,0 +1,38 @@
+@ on compile
+@ breaking
+
+define global class Language {
+    private final var index: int?
+    private final var dictionary: dictionary = {}
+    
+    public new(index: int?, dictionary: dictionary) {
+        eval this.index = index
+        for (pair in dictionary) {
+            eval this.dictionary[pair.key] = pair.value
+        }
+    }
+    
+    public getIndex(): int? {return index}
+    
+    public containsKey(key: string): boolean {
+        return dictionary[key] != null
+    }
+    
+    public this[key: string] {
+        get {
+            var value = dictionary[key]
+            if (value != null) return value
+            
+            if (this != Translator.getDefaultLanguage()) {
+                eval value = Translator.getDefaultLanguage()[key]
+                if (value != null) return value
+            }
+            
+            return key
+        }
+    }
+    
+    public override toString(): string {
+        return "Language[" + index + ", " + dictionary + "]"
+    }
+}
