@@ -1,3 +1,5 @@
+@ require translator:language
+
 var executeCommand = function(language: Language) {
     switch(args.COMMAND) {
         case "bossbar": {
