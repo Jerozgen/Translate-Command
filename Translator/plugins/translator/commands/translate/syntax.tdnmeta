@@ -135,10 +135,20 @@ define REPLACEITEM = group(
 define SCOREBOARD = group(
     literal("scoreboard").storeFlat("COMMAND"),
     literal("objectives"),
-    literal("modify").storeFlat("CHOICE"),
-    IDENTIFIER_A.storeVar("OBJECTIVE").hint("Objective"),
-    literal("displayName"),
-    TEXT_COMPONENT.storeVar("TEXT_COMPONENT").hint("Display Name").hint("Translatable")
+    choice(
+        group(
+            literal("add").storeFlat("CHOICE"),
+            IDENTIFIER_A.storeVar("OBJECTIVE").hint("Objective"),
+            IDENTIFIER_B.storeVar("CRITERIA").hint("Criteria"),
+            TEXT_COMPONENT.storeVar("TEXT_COMPONENT").hint("Display Name").hint("Translatable")
+        ),
+        group(
+            literal("modify").storeFlat("CHOICE"),
+            IDENTIFIER_A.storeVar("OBJECTIVE").hint("Objective"),
+            literal("displayname"),
+            TEXT_COMPONENT.storeVar("TEXT_COMPONENT").hint("Display Name").hint("Translatable")
+        )
+    )
 );
 
 define SET = group(

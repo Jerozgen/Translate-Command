@@ -190,6 +190,20 @@ var executeCommand = function(language: Language) {
             break
         }
         
+        case "scoreboard": {
+            switch(args.CHOICE) {
+                case "add": {
+                    scoreboard objectives add ${args.OBJECTIVE} ${args.CRITERIA} ${Translator.translateText(args.TEXT_COMPONENT, language)}
+                    break
+                }
+                case "modify": {
+                    scoreboard objectives modify ${args.OBJECTIVE} displayname ${Translator.translateText(args.TEXT_COMPONENT, language)}
+                    break
+                }
+            }
+            break
+        }
+        
         case "set": {
             set ${args.POINTER} = ${Translator.translateNBT(args.NBT_VALUE, language)}
             break
