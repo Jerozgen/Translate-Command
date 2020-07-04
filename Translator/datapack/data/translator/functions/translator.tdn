@@ -1,4 +1,6 @@
 @ on compile
+@ priority 1000000000
+@ require translator:language
 @ breaking
 
 define global static final class Translator {

@@ -1,4 +1,5 @@
 @ require translator:language
+@ require translator:translator
 
 var executeCommand = function(language: Language) {
     switch(args.COMMAND) {
