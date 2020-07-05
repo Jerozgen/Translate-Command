@@ -252,6 +252,12 @@ define global static final class Translator {
         return translated
     }
     
+    public static translateItem(object: custom_item, language: Language): item {
+        var translated = new item(object.baseType)
+        eval translated.itemTag = translateNBT(nbt<{}>.merge(object.getItemTag()), language)
+        return translated
+    }
+    
     
     # ———————————————————————————————————————————————————————————————————————————————————
     public static translateBlock(object: block, language: Language): block {
@@ -268,5 +274,11 @@ define global static final class Translator {
         if (object.fullNBT != null)
             return translateNBT(object.fullNBT, language).merge(new nbt({id: object.type}))
         return new nbt({id: object.type})
+    }
+    
+    public static translateNewEntity(object: custom_entity, language: Language): tag_compound {
+        if (object.baseType == null) throw "Entity components cannot be translated"
+        
+        return translateNBT(object.getSettingNBT(), language).merge(new nbt({id: object.baseType}))
     }
 }
