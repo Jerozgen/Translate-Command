@@ -25,6 +25,28 @@ var executeCommand = function(language: Language) {
             break
         }
         
+        case "clone": {
+            switch(args.CLONE_MODE) {
+                case null: {
+                    clone ${args.FROM} ${args.FROM} ${args.DESTINATION} filtered ${Translator.translateBlock(args.BLOCK_TAGGED, language)}
+                    break
+                }
+                case "force": {
+                    clone ${args.FROM} ${args.FROM} ${args.DESTINATION} filtered ${Translator.translateBlock(args.BLOCK_TAGGED, language)} force
+                    break
+                }
+                case "move": {
+                    clone ${args.FROM} ${args.FROM} ${args.DESTINATION} filtered ${Translator.translateBlock(args.BLOCK_TAGGED, language)} move
+                    break
+                }
+                case "normal": {
+                    clone ${args.FROM} ${args.FROM} ${args.DESTINATION} filtered ${Translator.translateBlock(args.BLOCK_TAGGED, language)} normal
+                    break
+                }
+            }
+            break
+        }
+        
         case "data": {
             switch(args.CHOICE) {
                 case "merge": {
