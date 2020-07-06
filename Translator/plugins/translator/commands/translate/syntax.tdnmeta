@@ -29,6 +29,13 @@ define BOSSBAR = group(
     )
 );
 
+define CLEAR = group(
+    literal("clear").storeFlat("COMMAND"),
+    ENTITY.storeVar("ENTITY"),
+    ITEM_TAGGED.storeVar("ITEM_TAGGED", "TESTING").hint("Translatable"),
+    optional(INTEGER.storeVar("AMOUNT").hint("Amount"))
+);
+
 define CLONE = group(
     literal("clone").storeFlat("COMMAND"),
     COORDINATE_SET.storeVar("FROM").hint("Source From"),
@@ -81,6 +88,42 @@ define DATA = group(
             ).hint("Data Source")
         )
     )
+);
+
+define LOOT = group(
+    literal("loot").storeFlat("COMMAND"),
+    choice(
+        group(
+            literal("give").storeFlat("CHOICE_DESTINATION"),
+            ENTITY.storeVar("ENTITY")
+        ),
+        group(
+            literal("insert").storeFlat("CHOICE_DESTINATION"),
+            COORDINATE_SET.storeVar("COORDINATE_SET")
+        ),
+        group(
+            literal("replace").storeFlat("CHOICE_DESTINATION"),
+            choice(
+                BLOCK_LITERAL,
+                ENTITY_LITERAL
+            ),
+            SLOT_ID.storeVar("SLOT_ID"),
+            optional(INTEGER.storeVar("COUNT").hint("Count"))
+        ),
+        group(
+            literal("spawn").storeFlat("CHOICE_DESTINATION"),
+            COORDINATE_SET.storeVar("COORDINATE_SET")
+        )
+    ).hint("Loot Destination"),
+    choice(
+        group(
+            literal("fish").storeFlat("CHOICE_SOURCE"),
+            RESOURCE_LOCATION.storeVar("RESOURCE_LOCATION").hint("Loot Table")
+        ),
+        literal("mine").storeFlat("CHOICE_SOURCE")
+    ).hint("Loot Source"),
+    COORDINATE_SET.storeVar("SOURCE_COORDINATE_SET"),
+    ITEM.storeVar("TOOL").hint("Tool")
 );
 
 define EXPAND = group(
@@ -253,8 +296,10 @@ return group(
     choice(
         USING_SUMMON_INSTRUCTION,
         BOSSBAR,
+        CLEAR,
         CLONE,
         DATA,
+        LOOT,
         EXPAND,
         FILL,
         FUNCTION,

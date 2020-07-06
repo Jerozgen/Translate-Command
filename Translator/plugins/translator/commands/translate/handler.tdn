@@ -17,6 +17,14 @@ var executeCommand = function(language: Language) {
             break
         }
         
+        case "clear": {
+            if (args.AMOUNT == null)
+                clear ${args.ENTITY} ${Translator.translateItem(args.ITEM_TAGGED, language)}
+            else
+                clear ${args.ENTITY} ${Translator.translateItem(args.ITEM_TAGGED, language)} ${args.AMOUNT}
+            break
+        }
+        
         case "data": {
             switch(args.CHOICE) {
                 case "merge": {
@@ -121,6 +129,94 @@ var executeCommand = function(language: Language) {
                                     break
                                 }
                             }
+                            break
+                        }
+                    }
+                    break
+                }
+            }
+            break
+        }
+        
+        case "loot": {
+            switch(args.CHOICE_DESTINATION) {
+                case "give": {
+                    switch(args.CHOICE_SOURCE) {
+                        case "fish": {
+                            loot give ${args.ENTITY} fish ${args.RESOURCE_LOCATION} ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                            break
+                        }
+                        case "mine": {
+                            loot give ${args.ENTITY} mine ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                            break
+                        }
+                    }
+                    break
+                }
+                case "insert": {
+                    switch(args.CHOICE_SOURCE) {
+                        case "fish": {
+                            loot insert ${args.COORDINATE_SET} fish ${args.RESOURCE_LOCATION} ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                            break
+                        }
+                        case "mine": {
+                            loot insert ${args.COORDINATE_SET} mine ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                            break
+                        }
+                    }
+                    break
+                }
+                case "replace": {
+                    switch(args.CHOICE_SOURCE) {
+                        case "fish": {
+                            switch(args.CHOICE_LITERAL) {
+                                case "block": {
+                                    if (args.AMOUNT == null)
+                                        loot replace block ${args.COORDINATE_SET} ${args.SLOT_ID} fish ${args.RESOURCE_LOCATION} ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                                    else
+                                        loot replace block ${args.COORDINATE_SET} ${args.SLOT_ID} ${args.COUNT} fish ${args.RESOURCE_LOCATION} ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                                    break
+                                }
+                                case "entity": {
+                                    if (args.AMOUNT == null)
+                                        loot replace entity ${args.ENTITY} ${args.SLOT_ID} fish ${args.RESOURCE_LOCATION} ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                                    else
+                                        loot replace entity ${args.ENTITY} ${args.SLOT_ID} ${args.COUNT} fish ${args.RESOURCE_LOCATION} ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                                    break
+                                }
+                            }
+                            break
+                        }
+                        case "mine": {
+                            switch(args.CHOICE_LITERAL) {
+                                case "block": {
+                                    if (args.AMOUNT == null)
+                                        loot replace block ${args.COORDINATE_SET} ${args.SLOT_ID} mine ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                                    else
+                                        loot replace block ${args.COORDINATE_SET} ${args.SLOT_ID} ${args.COUNT} mine ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                                    break
+                                }
+                                case "entity": {
+                                    if (args.AMOUNT == null)
+                                        loot replace entity ${args.ENTITY} ${args.SLOT_ID} mine ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                                    else
+                                        loot replace entity ${args.ENTITY} ${args.SLOT_ID} ${args.COUNT} mine ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                                    break
+                                }
+                            }
+                            break
+                        }
+                    }
+                    break
+                }
+                case "spawn": {
+                    switch(args.CHOICE_SOURCE) {
+                        case "fish": {
+                            loot spawn ${args.COORDINATE_SET} fish ${args.RESOURCE_LOCATION} ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
+                            break
+                        }
+                        case "mine": {
+                            loot spawn ${args.COORDINATE_SET} mine ${args.SOURCE_COORDINATE_SET} ${Translator.translateItem(args.TOOL, language)}
                             break
                         }
                     }
