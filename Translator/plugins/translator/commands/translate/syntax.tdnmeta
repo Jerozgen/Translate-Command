@@ -278,7 +278,7 @@ define USING_SUMMON_INSTRUCTION = group(
     literal("with"),
     IDENTIFIER_A.storeVar("TAG_NAME").hint("Summoning Tag"),
     optional(
-        MODIFIER.storeVar("MODIFIER")
+        list(MODIFIER.storeVar("MODIFIERS"))
     ),
     ANONYMOUS_INNER_FUNCTION.storeVar("ANONYMOUS_INNER_FUNCTION")
 );

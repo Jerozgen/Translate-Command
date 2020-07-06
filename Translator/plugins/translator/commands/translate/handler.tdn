@@ -412,7 +412,7 @@ var executeCommand = function(language: Language) {
             if (args.COORDINATE_SET == null)
                 function {
                     using summon ${Translator.translateNewEntity(args.NEW_ENTITY_LITERAL, language)}
-                    with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                    with ${args.TAG_NAME} raw ${args.MODIFIERS} {
                         if (args.ANONYMOUS_INNER_FUNCTION != null)
                             eval args.ANONYMOUS_INNER_FUNCTION()
                     }
@@ -420,7 +420,7 @@ var executeCommand = function(language: Language) {
             else if (args.NBT_COMPOUND == null)
                 function {
                     using summon ${Translator.translateNewEntity(args.NEW_ENTITY_LITERAL, language)} ${args.COORDINATE_SET}
-                    with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                    with ${args.TAG_NAME} raw ${args.MODIFIERS} {
                         if (args.ANONYMOUS_INNER_FUNCTION != null)
                             eval args.ANONYMOUS_INNER_FUNCTION()
                     }
@@ -428,7 +428,7 @@ var executeCommand = function(language: Language) {
             else
                 function {
                     using summon ${Translator.translateNewEntity(args.NEW_ENTITY_LITERAL, language)} ${args.COORDINATE_SET} 
-                    ${Translator.translateNBT(args.NBT_COMPOUND, language)} with ${args.TAG_NAME} raw ${args.MODIFIER} {
+                    ${Translator.translateNBT(args.NBT_COMPOUND, language)} with ${args.TAG_NAME} raw ${args.MODIFIERS} {
                         if (args.ANONYMOUS_INNER_FUNCTION != null)
                             eval args.ANONYMOUS_INNER_FUNCTION()
                     }
