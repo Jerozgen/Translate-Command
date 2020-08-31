@@ -1,0 +1,3 @@
+[submodule "NBTparser"]
+	path = NBTparser
+	url = https://github.com/Jerozgen/NBTparser.git
