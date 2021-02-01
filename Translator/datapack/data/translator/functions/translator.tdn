@@ -154,7 +154,7 @@ define global static final class Translator {
     
     
     # ———————————————————————————————————————————————————————————————————————————————————
-    public static translateText(object: dictionary, language: Language): dictionary {
+    public static translateText(object: dictionary, language: Language?): dictionary {
         return object.map(
             function(key, value) {
                 switch (key) {
@@ -172,12 +172,14 @@ define global static final class Translator {
                             }
                         } catch (e) {}
                         
-                        return value
+                        return translateText(value, language)
                     }
                     case "tag": {
                         return translateNBT(NBT.parse(value), language)
                     }
                     case "translate": {
+                        if (language == null) eval language = currentLanguage
+                        
                         if (language[value] != null && language[value] is string)
                             return language[value]
                         
@@ -192,7 +194,7 @@ define global static final class Translator {
         )
     }
     
-    public static translateText(object: list, language: Language): list {
+    public static translateText(object: list, language: Language?): list {
         return object.map(
             function(value, index) {
                 return translateText(value, language)
@@ -200,18 +202,18 @@ define global static final class Translator {
         )
     }
     
-    public static translateText(object: boolean, language: Language): boolean {return object}
-    public static translateText(object: int,     language: Language): int     {return object}
-    public static translateText(object: real,    language: Language): real    {return object}
-    public static translateText(object: string,  language: Language): string  {return object}
+    public static translateText(object: boolean, language: Language?): boolean {return object}
+    public static translateText(object: int,     language: Language?): int     {return object}
+    public static translateText(object: real,    language: Language?): real    {return object}
+    public static translateText(object: string,  language: Language?): string  {return object}
     
-    public static translateText(object: text_component, language: Language): text_component {
+    public static translateText(object: text_component, language: Language?): text_component {
         return new text_component(translateText(JSON.parse((string) object), language))
     }
     
     
     # ———————————————————————————————————————————————————————————————————————————————————
-    public static translateNBT(object: tag_compound, language: Language): tag_compound {
+    public static translateNBT(object: tag_compound, language: Language?): tag_compound {
         var translated = {}
         for (pair in object) {
             eval translated[pair.key] = translateNBT(pair.value, language)
@@ -219,7 +221,7 @@ define global static final class Translator {
         return new nbt(translated)
     }
     
-    public static translateNBT(object: tag_list, language: Language): tag_list {
+    public static translateNBT(object: tag_list, language: Language?): tag_list {
         var translated = []
         for (value in object) {
             eval translated.add(translateNBT(value, language))
@@ -227,7 +229,7 @@ define global static final class Translator {
         return new nbt(translated)
     }
     
-    public static translateNBT(object: tag_string, language: Language): tag_string {
+    public static translateNBT(object: tag_string, language: Language?): tag_string {
         var jsonObject = null
         try {
             eval jsonObject = JSON.parse(JSON.parse((string) object))
@@ -239,20 +241,20 @@ define global static final class Translator {
         return new nbt(new text_component(translateText(jsonObject, language)))
     }
     
-    public static translateNBT(object: nbt_value, language: Language): nbt_value {
+    public static translateNBT(object: nbt_value, language: Language?): nbt_value {
         return object
     }
     
     
     # ———————————————————————————————————————————————————————————————————————————————————
-    public static translateItem(object: item, language: Language): item {
+    public static translateItem(object: item, language: Language?): item {
         var translated = new item(object.itemType)
         if (object.itemTag != null)
             eval translated.itemTag = translateNBT(nbt<{}>.merge(object.itemTag), language)
         return translated
     }
     
-    public static translateItem(object: custom_item, language: Language): item {
+    public static translateItem(object: custom_item, language: Language?): item {
         var translated = new item(object.baseType)
         eval translated.itemTag = translateNBT(nbt<{}>.merge(object.getItemTag()), language)
         return translated
@@ -260,7 +262,7 @@ define global static final class Translator {
     
     
     # ———————————————————————————————————————————————————————————————————————————————————
-    public static translateBlock(object: block, language: Language): block {
+    public static translateBlock(object: block, language: Language?): block {
         var translated = new block(object.blockType)
         eval translated.blockState = object.blockState
         if (object.blockTag != null)
@@ -270,13 +272,13 @@ define global static final class Translator {
     
     
     # ———————————————————————————————————————————————————————————————————————————————————
-    public static translateNewEntity(object: dictionary, language: Language): tag_compound {
-        if (object.fullNBT != null)
-            return translateNBT(object.fullNBT, language).merge(new nbt({id: object.type}))
-        return new nbt({id: object.type})
+    public static translateNewEntity(object: dictionary, language: Language?): tag_compound {
+        if (object.fullNBT == null) return new nbt({id: object.type})
+        
+        return translateNBT(object.fullNBT, language).merge(new nbt({id: object.type}))
     }
     
-    public static translateNewEntity(object: custom_entity, language: Language): tag_compound {
+    public static translateNewEntity(object: custom_entity, language: Language?): tag_compound {
         if (object.baseType == null) throw "Entity components cannot be translated"
         
         return translateNBT(object.getSettingNBT(), language).merge(new nbt({id: object.baseType}))
